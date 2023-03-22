@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Price Data</title>
+    <style>
+      /* CSS styles */
+      h1 {
+        font-size: 36px;
+        text-align: center;
+        margin-top: 50px;
+        color: blue;
+      }
+      table {
+			border-collapse: collapse;
+			margin: 20px;
+			font-family: Arial, sans-serif;
+			width: 100%;
+		}
+		th, td {
+			padding: 8px;
+			text-align: left;
+			border-bottom: 1px solid #ddd;
+		}
+		th {
+			background-color: #f2f2f2;
+			font-weight: bold;
+			color: #333333;
+		}
+    #fetch-data {
+        display: block;
+        margin: 0 auto;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Price Data</h1>
+    <table>
+      <thead>
+        <tr>
+          <th>Title</th>
+          <th>Open_price</th>
+          <th>Close_price</th>
+          <th>High_price</th>
+          <th>Low_price</th>
+          <th>VolumneTo</th>
+          <th>VolumeFrom</th>
+
+        </tr>
+      </thead>
+      <tbody id="data"></tbody>
+    </table>
+    <button id="fetch-data">Fetch Data</button>
+
+    <div>
+      <label for="price-input">Enter a price:</label>
+      <input type="text" id="price-input" name="price-input">
+      <button id="predict-price">Predict Price</button>
+    </div>
+    <!-- /*set the button in the center*/ -->
+  
+      
+  
+  <script>
+      // JavaScript code to fetch and display data
+      const fetchData = async () => {
+        const response = await fetch('/data');
+        const data = await response.json();
+        const tableBody = document.querySelector('#data');
+        tableBody.innerHTML = '';
+        data.forEach(row => {
+          const tr = document.createElement('tr');
+          tr.innerHTML = `
+            <td>${row.title}</td>
+            <td>${row.open_price}</td>
+            <td>${row.close_values}</td>
+            <td>${row.high_price}</td>
+            <td>${row.low_price}</td>
+            <td>${row.volumeto}</td>
+            <td>${row.volumefrom}</td>
+          `;
+          tableBody.appendChild(tr);
+        });
+      };
+
+      // JavaScript code to predict price
+      const predictPrice = async () => {
+        const priceInput = document.querySelector('#price-input');
+        const price = priceInput.value;
+        const response = await fetch(`/predict?price=${price}`);
+        const data = await response.json();
+        console.log(data);
+        //data is a json object with only one key, predicted_price
+        //data.predicted_price is the value of the key
+        alert(`Predicted price: ${data.predicted_price}`);
+
+      };
+      document.querySelector('#predict-price').addEventListener('click', predictPrice);
+
+      document.querySelector('#fetch-data').addEventListener('click', fetchData);
+    </script>
+  </body>
+</html>
